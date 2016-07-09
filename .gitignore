@@ -1,0 +1,12 @@
+/test-definition-model.iml
+/.idea
+/target/
+.settings/
+
+/application/application.iml
+/application/target
+/application/src/test/resources/generated
+/configuration-personal.yml
+/api/api.iml
+
+benchflow_make
