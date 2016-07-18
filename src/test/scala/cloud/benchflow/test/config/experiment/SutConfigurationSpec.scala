@@ -1,5 +1,6 @@
 package cloud.benchflow.test.config.experiment
 
+import cloud.benchflow.test.config.ConfigurationYamlProtocol
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
@@ -7,10 +8,10 @@ import org.scalatest.{FlatSpec, Matchers}
   *
   * Created on 18/07/16.
   */
-class SutConfigurationSpec extends FlatSpec with Matchers {
+class SutConfigurationSpec extends FlatSpec with Matchers with ConfigurationYamlProtocol {
 
   import net.jcazevedo.moultingyaml._
-  import BenchFlowExperimentYamlProtocol._
+  import cloud.benchflow.test.config._
 
   "Deploy" should "parse correctly" in {
 

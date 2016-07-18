@@ -1,5 +1,6 @@
 package cloud.benchflow.test.config.experiment
 
+import cloud.benchflow.test.config.ConfigurationYamlProtocol
 import org.scalatest.{Matchers, FlatSpec}
 
 /**
@@ -7,10 +8,10 @@ import org.scalatest.{Matchers, FlatSpec}
   *
   * Created on 18/07/16.
   */
-class WorkloadMixSpec extends FlatSpec with Matchers {
+class WorkloadMixSpec extends FlatSpec with Matchers with ConfigurationYamlProtocol {
 
   import net.jcazevedo.moultingyaml._
-  import BenchFlowExperimentYamlProtocol._
+  import cloud.benchflow.test.config._
 
   "Matrix Workload Mix" should "parse correctly" in {
 
