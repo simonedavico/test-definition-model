@@ -265,6 +265,8 @@ object BenchFlowExperimentYamlProtocol extends DefaultYamlProtocol {
         YamlString("deviation")
       ).headOption match {
         case Some(YamlNumber(dev: Double)) => Some(dev)
+        case Some(YamlNumber(dev: Int)) => Some(dev.toDouble)
+        case Some(YamlNumber(dev: Float)) => Some(dev.toDouble)
         case _ => None
       }
 
@@ -291,6 +293,8 @@ object BenchFlowExperimentYamlProtocol extends DefaultYamlProtocol {
         YamlString("deviation")
       ).headOption match {
         case Some(YamlNumber(dev: Double)) => Some(dev)
+        case Some(YamlNumber(dev: Int)) => Some(dev.toDouble)
+        case Some(YamlNumber(dev: Float)) => Some(dev.toDouble)
         case _ => None
       }
 
@@ -313,6 +317,8 @@ object BenchFlowExperimentYamlProtocol extends DefaultYamlProtocol {
         YamlString("deviation")
       ).headOption match {
         case Some(YamlNumber(dev: Double)) => Some(dev)
+        case Some(YamlNumber(dev: Int)) => Some(dev.toDouble)
+        case Some(YamlNumber(dev: Float)) => Some(dev.toDouble)
         case _ => None
       }
 
@@ -340,6 +346,8 @@ object BenchFlowExperimentYamlProtocol extends DefaultYamlProtocol {
         YamlString("deviation")
       ).headOption match {
         case Some(YamlNumber(dev: Double)) => Some(dev)
+        case Some(YamlNumber(dev: Int)) => Some(dev.toDouble)
+        case Some(YamlNumber(dev: Float)) => Some(dev.toDouble)
         case _ => None
       }
 
