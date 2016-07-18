@@ -13,7 +13,18 @@
 		<scala.major>2.11.7</scala.major>
         <scala.xml.version>1.0.5</scala.xml.version>
         <scala.parser.combinators.version>1.0.4</scala.parser.combinators.version>
+        <java.semver.version>0.9.0</java.semver.version>
+        <moultingyaml.version>v0.2</moultingyaml.version>
 	</properties>
+
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
 	
 	<dependencies>
 	
@@ -33,6 +44,18 @@
             <groupId>org.scala-lang.modules</groupId>
             <artifactId>scala-parser-combinators_2.11</artifactId>
             <version>${scala.parser.combinators.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jcazevedo</groupId>
+            <artifactId>moultingyaml</artifactId>
+            <version>${moultingyaml.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.zafarkhaja</groupId>
+            <artifactId>java-semver</artifactId>
+            <version>${java.semver.version}</version>
         </dependency>
         
     </dependencies>
