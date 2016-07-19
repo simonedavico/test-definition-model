@@ -7,7 +7,14 @@ import cloud.benchflow.test.config._
   *
   * Created on 18/07/16.
   */
-abstract class Goal
+
+sealed trait GoalType
+case object Config extends GoalType
+case object Custom extends GoalType
+
+abstract class Goal(goalType: GoalType, params: Seq[ParameterDefinition[_]])
+
+
 case class BenchFlowTest(name: String,
                          description: String,
                          sut: Sut,
