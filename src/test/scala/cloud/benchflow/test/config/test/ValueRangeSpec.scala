@@ -135,4 +135,43 @@ class ValueRangeSpec extends FlatSpec with Matchers {
 
   }
 
+  "ValueRangeYamlProtocol" should "infer constant value range" in {
+
+    val constant = "1000".parseYaml.convertTo[ValueRange[_]]
+    val parsedConstant = Constant(1000)
+
+    constant should be (parsedConstant)
+
+  }
+
+  "ValueRangeYamlProtocol" should "infer factors value range" in {
+
+    val factors = "values: [ a, b, c ]".parseYaml.convertTo[ValueRange[_]]
+
+    val parsedFactors = Factors(Vector("a", "b", "c"))
+
+    factors should be (parsedFactors)
+
+  }
+
+  "ValueRangeYamlProtocol" should "infer ranged value range" in {
+
+    val stepFunction =
+      """
+        |range: 1...100
+        |step: '+1'
+      """.stripMargin.parseYaml.convertTo[ValueRange[_]].asInstanceOf[Step]
+
+    val parsedStepFunction = Step(
+      min = 1d,
+      max = 100d,
+      step = 1d,
+      stepFunction = implicitly[Numeric[Double]].plus
+    )
+
+    stepFunction.increment(1) should (be (parsedStepFunction.increment(1)) and be (2))
+
+  }
+
+
 }
