@@ -10,6 +10,9 @@ import cloud.benchflow.test.config.ConfigurationYamlProtocol
   */
 object BenchFlowTestYamlProtocol extends ConfigurationYamlProtocol with ValueRangeYamlProtocol {
 
+
+
+
   implicit object GoalFormat extends YamlFormat[Goal] {
 
     override def read(yaml: YamlValue): Goal = {
@@ -22,13 +25,13 @@ object BenchFlowTestYamlProtocol extends ConfigurationYamlProtocol with ValueRan
 
 
 
-  implicit object ParameterDefinitionYamlFormat extends YamlFormat[ParameterDefinition[_]] {
+  implicit object ParameterDefinitionYamlFormat extends YamlFormat[ParameterDefinition] {
 
-    override def read(yaml: YamlValue): ParameterDefinition[_] = {
+    override def read(yaml: YamlValue): ParameterDefinition = {
       ???
     }
 
-    override def write(obj: ParameterDefinition[_]): YamlValue = ???
+    override def write(obj: ParameterDefinition): YamlValue = ???
 
   }
 

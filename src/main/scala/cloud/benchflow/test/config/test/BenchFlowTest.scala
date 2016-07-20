@@ -9,10 +9,18 @@ import cloud.benchflow.test.config._
   */
 
 sealed trait GoalType
+object GoalType {
+
+  def apply(goalType: String) = goalType match {
+    case "config" => Config
+    case "custom" => Custom
+  }
+
+}
 case object Config extends GoalType
 case object Custom extends GoalType
 
-abstract class Goal(goalType: GoalType, params: Seq[ParameterDefinition[_]])
+case class Goal(goalType: GoalType, params: Seq[ParameterDefinition])
 
 
 case class BenchFlowTest(name: String,

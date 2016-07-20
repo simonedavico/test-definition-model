@@ -9,7 +9,12 @@ trait ValueRange[T] { def size: Int }
 
 case class Constant[T](value: T) extends ValueRange[T] { def size = 1 }
 
-case class Factors[T](values: Seq[T]) extends ValueRange[T] { def size = values.size }
+case class Factors[T](values: Seq[T]) extends ValueRange[T] {
+  def size = values.size
+
+  //TODO: implement increment also for factors?
+
+}
 
 case class Step(min: Double, max: Double, step: Double,
                              stepFunction: (Double,Double) => Double) extends ValueRange[Double] {

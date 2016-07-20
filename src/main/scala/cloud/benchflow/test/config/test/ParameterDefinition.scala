@@ -5,15 +5,32 @@ package cloud.benchflow.test.config.test
   *
   *         Created on 19/07/16.
   */
-abstract class ParameterDefinition[T](name: String, dimensionDefinition: ValueRange[T])
+abstract class ParameterDefinition(val name: String, val scope: String, val dimensionDefinition: ValueRange[_]) {
+
+  def completeName = s"$scope.$name"
+
+}
 
 //parameter definition for a service
-class ServiceParameterDefinition[T](name: String, serviceName: String, dimensionDefinition: ValueRange[T])
-  extends ParameterDefinition[T](name, dimensionDefinition)
+abstract class ServiceParameterDefinition(override val name: String, serviceName: String, override val dimensionDefinition: ValueRange[_])
+  extends ParameterDefinition(name, serviceName, dimensionDefinition)
 
-//parameter definition for the whole system
-sealed abstract class SystemParameterDefinition[T](name: String, dimensionDefinition: ValueRange[T])
-  extends ParameterDefinition[T](name, dimensionDefinition)
+//an application level parameter for a service
+case class ApplicationParameterDefinition(override val name: String, serviceName: String, override val dimensionDefinition: ValueRange[_])
+  extends ServiceParameterDefinition(name, serviceName, dimensionDefinition)
+
+//memory on a service
+case class ServiceMemoryDefinition(serviceName: String, override val dimensionDefinition: ValueRange[_])
+  extends ServiceParameterDefinition(SystemParameterDefinition.memoryDefinitionKey, serviceName, dimensionDefinition)
+
+//cpus on a service
+case class ServiceCpusDefinition(serviceName: String, override val dimensionDefinition: ValueRange[_])
+  extends ServiceParameterDefinition(SystemParameterDefinition.cpusDefinitionKey, serviceName, dimensionDefinition)
+
+
+//parameter definition for the whole system (do cpus and memory make sense here?)
+sealed abstract class SystemParameterDefinition(name: String, dimensionDefinition: ValueRange[_])
+  extends ParameterDefinition(name, "system", dimensionDefinition)
 object SystemParameterDefinition {
 
   val cpusDefinitionKey = "cpus"
@@ -24,9 +41,9 @@ object SystemParameterDefinition {
 
 //predefined system parameter definitions
 //cpus definition
-class CpusDefinition(dimensionDefinition: ValueRange[Int])
-  extends SystemParameterDefinition[Int](SystemParameterDefinition.cpusDefinitionKey, dimensionDefinition)
+case class CpusDefinition(override val dimensionDefinition: ValueRange[_])
+  extends SystemParameterDefinition(SystemParameterDefinition.cpusDefinitionKey, dimensionDefinition)
 
 //memory definition
-class MemoryDefinition(dimensionDefinition: ValueRange[Int])
-  extends SystemParameterDefinition[Int](SystemParameterDefinition.memoryDefinitionKey, dimensionDefinition)
+case class MemoryDefinition(override val dimensionDefinition: ValueRange[_])
+  extends SystemParameterDefinition(SystemParameterDefinition.memoryDefinitionKey, dimensionDefinition)
