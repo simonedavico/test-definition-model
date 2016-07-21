@@ -12,7 +12,7 @@ import cloud.benchflow.test.config._
   */
 object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
 
-  implicit val virtualUsersFormat = yamlFormat1(Users)
+  implicit val usersFormat = yamlFormat1(Users)
 
   implicit object BenchFlowExperimentFormat extends YamlFormat[BenchFlowExperiment] {
 
@@ -22,7 +22,7 @@ object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
         YamlString("testName") -> bb.name.toYaml,
         YamlString("description") -> bb.description.toYaml,
         YamlString("trials") -> bb.trials.trials.toYaml,
-        YamlString("virtualUsers") -> bb.virtualUsers.users.toYaml,
+        YamlString("users") -> bb.users.users.toYaml,
         YamlString("execution") -> bb.execution.toYaml,
         YamlString("properties") -> bb.properties.toYaml,
         YamlString("drivers") -> {
@@ -55,7 +55,7 @@ object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
       val properties = getObject("properties").convertTo[Properties]
       val sutConfig = getObject("sut-configuration").convertTo[SutConfiguration]
       val trials = getObject("trials").convertTo[TotalTrials]
-      val virtualUsers = getObject("virtualUsers").convertTo[Users]
+      val users = getObject("users").convertTo[Users]
       val execution = bfBmark.get(YamlString("execution")).get.convertTo[LoadFunction]
 
       BenchFlowExperiment(
@@ -66,7 +66,7 @@ object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
         properties = properties,
         trials = trials,
         sutConfiguration = sutConfig,
-        virtualUsers = virtualUsers,
+        users = users,
         execution = execution
       )
     }

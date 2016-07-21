@@ -11,7 +11,7 @@ case class Users(users: Int)
 case class BenchFlowExperiment(name: String,
                                description: String,
                                sut: Sut,
-                               virtualUsers: Users,
+                               users: Users,
                                drivers: Seq[Driver[_ <: Operation]],
                                trials: TotalTrials,
                                execution: LoadFunction,

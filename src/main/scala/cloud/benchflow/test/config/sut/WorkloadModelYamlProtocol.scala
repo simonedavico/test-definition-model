@@ -6,7 +6,7 @@ import net.jcazevedo.moultingyaml._
 /**
   * @author Simone D'Avico (simonedavico@gmail.com)
   *
-  *         Created on 21/07/16.
+  * Created on 21/07/16.
   */
 trait WorkloadModelYamlProtocol extends DefaultYamlProtocol with WorkloadMixYamlProtocol {
 
