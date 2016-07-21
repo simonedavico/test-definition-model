@@ -7,10 +7,9 @@ import org.scalatest.{Matchers, FlatSpec}
   *
   * Created on 19/07/16.
   */
-class ValueRangeSpec extends FlatSpec with Matchers {
+class ValueRangeSpec extends FlatSpec with Matchers with ValueRangeYamlProtocol {
 
   import net.jcazevedo.moultingyaml._
-  import BenchFlowTestYamlProtocol._
 
 
   "Int constant value assignment" should "parse correctly" in {
