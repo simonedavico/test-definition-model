@@ -52,7 +52,7 @@ class GoalSpec extends FlatSpec with Matchers with GoalYamlProtocol {
         )
       ),
       observed = Some(Map(
-        "camunda" -> Vector(
+        "camunda" -> List(
           "aMetric"
         )
       ))
@@ -60,7 +60,9 @@ class GoalSpec extends FlatSpec with Matchers with GoalYamlProtocol {
 
     //TODO: eventually improve this test
     goal should have (
-      'goalType (Custom)
+      'goalType (Custom),
+      'explored (parsedGoal.explored),
+      'observed (parsedGoal.observed)
     )
 
   }
