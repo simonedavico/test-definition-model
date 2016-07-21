@@ -34,6 +34,6 @@ case class BenchFlowTest(name: String,
                          trials: TotalTrials,
                          goal: Goal,
                          drivers: Seq[Driver[_ <: Operation]],
-                         loadFunction: Execution,
+                         loadFunction: LoadFunction,
                          properties: Option[Properties],
                          sutConfiguration: SutConfiguration)

@@ -1,5 +1,7 @@
 package cloud.benchflow.test.config.test
 
+import cloud.benchflow.test.config.sut.http.{HttpDriver, Http}
+import cloud.benchflow.test.config.sut.wfms.{WfMSDriver, WfMS}
 import net.jcazevedo.moultingyaml._
 import cloud.benchflow.test.config._
 
@@ -41,7 +43,7 @@ trait BenchFlowTestYamlProtocol extends ConfigurationYamlProtocol with GoalYamlP
         YamlObject(YamlString("trials") -> yamlTrials).convertTo[TotalTrials]
       }.get
 
-      val loadFunction = testObject.fields.get(YamlString("execution")).get.convertTo[Execution]
+      val loadFunction = testObject.fields.get(YamlString("execution")).get.convertTo[LoadFunction]
 
       val goal = testObject.fields.get(YamlString("goal")).get.convertTo[Goal]
 

@@ -1,6 +1,8 @@
 package cloud.benchflow.test.config.experiment
 
 import cloud.benchflow.test.config.ConfigurationYamlProtocol
+import cloud.benchflow.test.config.sut.http.{Get, HttpDriver, Put, HttpOperation}
+import cloud.benchflow.test.config.sut.wfms.WfMSOperation
 import org.scalatest.{Matchers, FlatSpec}
 
 /**

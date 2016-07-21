@@ -7,14 +7,14 @@ import cloud.benchflow.test.config._
   *
   * Created on 11/02/16.
   */
-case class VirtualUsers(virtualUsers: Int)
+case class Users(users: Int)
 case class BenchFlowExperiment(name: String,
                                description: String,
                                sut: Sut,
-                               virtualUsers: VirtualUsers,
+                               virtualUsers: Users,
                                drivers: Seq[Driver[_ <: Operation]],
                                trials: TotalTrials,
-                               execution: Execution,
+                               execution: LoadFunction,
                                properties: Properties,
                                sutConfiguration: SutConfiguration)
 {

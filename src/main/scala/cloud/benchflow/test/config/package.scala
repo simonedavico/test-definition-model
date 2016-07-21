@@ -1,5 +1,8 @@
 package cloud.benchflow.test
 
+import cloud.benchflow.test.config.sut.http.Http
+import cloud.benchflow.test.config.sut.wfms.WfMS
+
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -9,6 +12,9 @@ import scala.util.{Failure, Success, Try}
   */
 package object config {
 
+  /***
+    * Has to be extended for each supported version format
+    */
   trait Version { def isCompatible(other: Version): Boolean }
   object Version {
 
@@ -76,11 +82,10 @@ package object config {
 
   }
 
-
-  /**
-    * Possible types for a SUT
+  /***
+    * Has to be extended for each SUT type
     */
-  sealed trait SutsType
+  trait SutsType
   object SutsType {
 
     def apply(sutsType: String): SutsType = sutsType.toLowerCase match {
@@ -89,41 +94,15 @@ package object config {
       case _ => throw new Exception("Illegal value for field suts_type; possible values: wfms, http")
     }
   }
-  case object WfMS extends SutsType
-  case object Http extends SutsType
 
   case class Sut(name: String, version: Version, sutsType: SutsType)
 
-  /**
-    * Http methods values
-    */
-  sealed trait HttpMethod
-  object HttpMethod {
-    def apply(method: String) = method.toLowerCase match {
-      case "get" => Get
-      case "put" => Put
-      case "delete" => Delete
-      case "post" => Post
-      case _ => throw new Exception("Invalid http method specified.")
-    }
-  }
-  case object Get extends HttpMethod
-  case object Put extends HttpMethod
-  case object Delete extends HttpMethod
-  case object Post extends HttpMethod
-
   case class Properties(properties: Map[String, Any])
 
-  /**
-    * Possible operation types
+  /***
+    * Abstract operation model
     */
-  sealed abstract class Operation(val name: String, val data: Option[String])
-  case class HttpOperation(override val name: String,
-                           endpoint: String,
-                           override val data: Option[String] = None,
-                           method: HttpMethod,
-                           headers: Map[String, String] = Map()) extends Operation(name, data)
-  case class WfMSOperation(override val name: String, override val data: Option[String]) extends Operation(name, data)
+  abstract class Operation(val name: String, val data: Option[String])
 
   /**
     * Possible mixes
@@ -153,38 +132,15 @@ package object config {
 
 
   /**
-    * Possible driver types
+    * Abstract driver model
     */
-  sealed abstract class Driver[A <: Operation](val properties: Option[Properties],
+  abstract class Driver[A <: Operation](val properties: Option[Properties],
                                                val operations: Seq[A],
                                                val configuration: Option[DriverConfiguration])
-  case class HttpDriver(override val properties: Option[Properties],
-                        override val operations: Seq[HttpOperation],
-                        override val configuration: Option[DriverConfiguration])
-    extends Driver[HttpOperation](properties, operations, configuration)
-
-  sealed abstract class WfMSDriver(properties: Option[Properties],
-                                   operations: Seq[WfMSOperation],
-                                   configuration: Option[DriverConfiguration])
-    extends Driver[WfMSOperation](properties, operations, configuration)
-
-  case class WfMSStartDriver(override val properties: Option[Properties],
-                             override val operations: Seq[WfMSOperation],
-                             override val configuration: Option[DriverConfiguration])
-    extends WfMSDriver(properties, operations, configuration)
-
-  object WfMSDriver {
-    def apply(t: String,
-              properties: Option[Properties],
-              operations: Seq[WfMSOperation],
-              configuration: Option[DriverConfiguration]) = t match {
-      case "start" => WfMSStartDriver(properties, operations, configuration)
-      case _ => throw new Exception(s"Illegal driver identifier $t; possible values: start")
-    }
-  }
 
 
   case class TotalTrials(trials: Int)
+
 
   case class Deploy(deploy: Map[String, String]) {
     def get(serviceName: String) = deploy.get(serviceName)
@@ -202,7 +158,6 @@ package object config {
                               deploy: Deploy,
                               bfConfig: BenchFlowConfig)
 
-  case class Execution(rampUp: Int, steadyState: Int, rampDown: Int)
-
+  case class LoadFunction(rampUp: Int, steadyState: Int, rampDown: Int)
 
 }

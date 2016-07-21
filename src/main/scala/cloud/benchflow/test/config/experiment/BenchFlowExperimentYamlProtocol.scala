@@ -1,5 +1,7 @@
 package cloud.benchflow.test.config.experiment
 
+import cloud.benchflow.test.config.sut.http.{Http, HttpDriver}
+import cloud.benchflow.test.config.sut.wfms.{WfMSDriver, WfMS}
 import net.jcazevedo.moultingyaml._
 import cloud.benchflow.test.config._
 
@@ -10,7 +12,7 @@ import cloud.benchflow.test.config._
   */
 object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
 
-  implicit val virtualUsersFormat = yamlFormat1(VirtualUsers)
+  implicit val virtualUsersFormat = yamlFormat1(Users)
 
   implicit object BenchFlowExperimentFormat extends YamlFormat[BenchFlowExperiment] {
 
@@ -20,7 +22,7 @@ object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
         YamlString("testName") -> bb.name.toYaml,
         YamlString("description") -> bb.description.toYaml,
         YamlString("trials") -> bb.trials.trials.toYaml,
-        YamlString("virtualUsers") -> bb.virtualUsers.virtualUsers.toYaml,
+        YamlString("virtualUsers") -> bb.virtualUsers.users.toYaml,
         YamlString("execution") -> bb.execution.toYaml,
         YamlString("properties") -> bb.properties.toYaml,
         YamlString("drivers") -> {
@@ -53,8 +55,8 @@ object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
       val properties = getObject("properties").convertTo[Properties]
       val sutConfig = getObject("sut-configuration").convertTo[SutConfiguration]
       val trials = getObject("trials").convertTo[TotalTrials]
-      val virtualUsers = getObject("virtualUsers").convertTo[VirtualUsers]
-      val execution = bfBmark.get(YamlString("execution")).get.convertTo[Execution]
+      val virtualUsers = getObject("virtualUsers").convertTo[Users]
+      val execution = bfBmark.get(YamlString("execution")).get.convertTo[LoadFunction]
 
       BenchFlowExperiment(
         name = name,
