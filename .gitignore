@@ -5,11 +5,6 @@
 
 /application/application.iml
 /application/target
-/application/src/test/resources/generated
-/configuration-personal.yml
-/api/api.iml
 
 benchflow_make
 *.sc
-src/main/resources/
-src/test/resources/
