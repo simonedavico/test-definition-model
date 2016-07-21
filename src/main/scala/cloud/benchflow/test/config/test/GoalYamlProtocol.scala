@@ -41,9 +41,15 @@ trait GoalYamlProtocol extends DefaultYamlProtocol with ParameterDefinitionYamlP
         case YamlArray(defs) => defs flatMap readServiceParameterDefinitions
       }
 
+      val toExplore = yaml.asYamlObject.fields.get(YamlString("explore")).get.convertTo[Map[String, Seq[String]]]
+      val toObserve = yaml.asYamlObject.fields.get(YamlString("observe")).map(_.convertTo[Map[String, Seq[String]]])
+
+
       Goal(
         goalType = goalType,
-        params = parsedDefinitions
+        params = parsedDefinitions,
+        explored = toExplore,
+        observed = toObserve
       )
 
     }

@@ -22,6 +22,14 @@ class GoalSpec extends FlatSpec with Matchers with GoalYamlProtocol {
         |    - aVariable:
         |        range: 1...100
         |        step: '+1'
+        |
+        |explore:
+        |  camunda:
+        |  - aVariable
+        |
+        |observe:
+        |  camunda:
+        |  - aMetric
       """.stripMargin.parseYaml.convertTo[Goal]
 
     val parsedGoal = Goal(
@@ -37,7 +45,17 @@ class GoalSpec extends FlatSpec with Matchers with GoalYamlProtocol {
             stepFunction = implicitly[Numeric[Double]].plus
           )
         )
-      )
+      ),
+      explored = Map(
+        "camunda" -> Vector(
+          "aVariable"
+        )
+      ),
+      observed = Some(Map(
+        "camunda" -> Vector(
+          "aMetric"
+        )
+      ))
     )
 
     //TODO: eventually improve this test

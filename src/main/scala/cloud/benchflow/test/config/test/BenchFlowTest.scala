@@ -20,7 +20,12 @@ object GoalType {
 case object Config extends GoalType
 case object Custom extends GoalType
 
-case class Goal(goalType: GoalType, params: Seq[ParameterDefinition])
+//TODO: if needed, improve types for explored and observed
+//will probably need to implement a type for each observable metric
+case class Goal(goalType: GoalType,
+                params: Seq[ParameterDefinition],
+                explored: Map[String, Seq[String]],
+                observed: Option[Map[String, Seq[String]]])
 
 
 case class BenchFlowTest(name: String,
