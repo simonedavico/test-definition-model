@@ -42,4 +42,4 @@ deploy:
   on:
     tags: false
     repo: simonedavico/test-definition-model
-    branch: dev
+    branch: my-release
