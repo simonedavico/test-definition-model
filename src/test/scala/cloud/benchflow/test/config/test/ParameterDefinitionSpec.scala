@@ -19,9 +19,9 @@ class ParameterDefinitionSpec extends FlatSpec with Matchers with ParameterDefin
         |camunda:
         |  $A_FACTORS_DIMENSION:
         |    values: [ first, second, third ]
-      """.stripMargin.parseYaml.convertTo[ServiceParameterDefinition]
+      """.stripMargin.parseYaml.convertTo[ServiceParameterDefinition[_]]
 
-    val parsedServiceParameterDefinition = ApplicationParameterDefinition(
+    val parsedServiceParameterDefinition = ApplicationParameterDefinition[String](
       name = "$A_FACTORS_DIMENSION",
       serviceName = "camunda",
       dimensionDefinition = Factors(Vector("first", "second", "third"))
@@ -34,7 +34,7 @@ class ParameterDefinitionSpec extends FlatSpec with Matchers with ParameterDefin
 
   "Memory parameter definition" should "parse correctly" in {
 
-    val memoryParameterDefinition: SystemParameterDefinition =
+    val memoryParameterDefinition: SystemParameterDefinition[Double] =
       """
         |memory:
         |  range: 256...2048

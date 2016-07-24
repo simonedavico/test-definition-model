@@ -23,7 +23,7 @@ case object Custom extends GoalType
 //TODO: if needed, improve types for explored and observed
 //will probably need to implement a type for each observable metric
 case class Goal(goalType: GoalType,
-                params: Seq[ParameterDefinition],
+                params: Seq[ParameterDefinition[_]],
                 explored: Map[String, Seq[String]],
                 observed: Option[Map[String, Seq[String]]])
 
