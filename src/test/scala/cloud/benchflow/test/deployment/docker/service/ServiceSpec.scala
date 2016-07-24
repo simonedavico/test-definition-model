@@ -23,9 +23,12 @@ class ServiceSpec extends FlatSpec with Matchers {
         |  cpuset: 0,1,2,3
         |  mem_limit: 5g
         |  environment:
-        |    - constraint:node==bull
-        |    - VAR=5
-        |    - OTHER_VAR=http://google.com
+        |  - constraint:node==bull
+        |  - VAR=5
+        |  - OTHER_VAR=http://google.com
+        |  volumes_from:
+        |  - db:ro
+        |  - other
       """.stripMargin.parseYaml.convertTo[Service]
 
     val parsedService = Service(
@@ -39,7 +42,8 @@ class ServiceSpec extends FlatSpec with Matchers {
         )
       ),
       memLimit = Some(MemLimit(limit = 5, unit = GigaByte)),
-      cpuSet = Some(CpuSet(4))
+      cpuSet = Some(CpuSet(4)),
+      volumesFrom = Some(VolumesFrom(Vector(("db", Some(ReadOnly)), ("other", None))))
     )
 
     service should be (parsedService)

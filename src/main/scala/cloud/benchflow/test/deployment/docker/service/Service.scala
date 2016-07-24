@@ -26,6 +26,20 @@ object EnvironmentVariable {
 
 class EnvVar
 case class Volumes(volumes: Seq[String])
+
+sealed trait VolumeAccessRights { def toString: String }
+case object ReadOnly extends VolumeAccessRights { override def toString = "ro" }
+case object ReadWrite extends VolumeAccessRights { override def toString = "rw" }
+object VolumeAccessRights {
+
+  def apply(rights: String) = rights match {
+    case "ro" => ReadOnly
+    case "rw" => ReadWrite
+  }
+
+}
+
+case class VolumesFrom(volumes: Seq[(String, Option[VolumeAccessRights])])
 case class Ports(ports: Seq[String])
 case class Image(image: String)
 case class Expose(expose: Seq[Int])
@@ -55,7 +69,8 @@ case class Service(name: String,
                    extra_hosts: Option[ExtraHosts] = None,
                    expose: Option[Expose] = None,
                    cpuSet: Option[CpuSet] = None,
-                   memLimit: Option[MemLimit] = None) {
+                   memLimit: Option[MemLimit] = None,
+                   volumesFrom: Option[VolumesFrom] = None) {
 
   private val singlePort = "([0-9]{1,5})".r
   private val onlyPorts = s"$singlePort:$singlePort".r

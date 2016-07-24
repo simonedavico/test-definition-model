@@ -20,6 +20,52 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
   implicit val networkFormat = yamlFormat1(Network)
   implicit val extraHostsFormat = yamlFormat1(ExtraHosts)
 
+
+  implicit object VolumesFromYamlFormat extends YamlFormat[VolumesFrom] {
+
+    val volumesFromRegex = "([a-zA-Z0-9_]+)(?::(ro|rw))?".r
+
+    override def write(obj: VolumesFrom): YamlValue = {
+
+      YamlObject(
+        YamlString("volumes_from") ->
+          YamlArray(
+            obj.volumes.map { volume => volume match {
+
+                case (serviceName, None) => YamlString(serviceName)
+                case (serviceName, Some(accessRights)) => YamlString(s"$serviceName:$accessRights")
+
+              }
+            }.toVector
+          )
+      )
+
+    }
+
+    override def read(yaml: YamlValue): VolumesFrom = {
+
+      yaml match {
+
+        case YamlArray(yamlVolumesFrom) => VolumesFrom(
+          yamlVolumesFrom map { yamlVolumeFrom =>
+
+            yamlVolumeFrom.convertTo[String] match {
+              case volumesFromRegex(serviceName, null) =>
+                (serviceName, None)
+              case volumesFromRegex(serviceName, accessRights) =>
+                (serviceName, Some(VolumeAccessRights(accessRights)))
+            }
+          }
+        )
+
+        case _ => ???
+      }
+
+    }
+
+  }
+
+
   implicit object EnvironmentYamlFormat extends YamlFormat[Environment] {
 
     override def read(yaml: YamlValue): Environment = {
@@ -164,6 +210,13 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
               case _ => emptyMap
             })
 
+            ++
+
+            (c.volumesFrom match {
+              case Some(_) => c.volumesFrom.toYaml.asYamlObject.fields
+              case _ => emptyMap
+            })
+
           )
       )
     }
@@ -250,6 +303,12 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             case _ => None
           }
 
+          val volumesFrom = params.fields.get(YamlString("volumes_from")) match {
+            case Some(vf) =>
+              Some(vf.convertTo[VolumesFrom])
+            case _ => None
+          }
+
           Service(serviceName,
             image = image,
             containerName = cname,
@@ -261,7 +320,8 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             net = network,
             extra_hosts = extra_hosts,
             cpuSet = cpuset,
-            memLimit = memlimit
+            memLimit = memlimit,
+            volumesFrom = volumesFrom
           )
         case _ => throw DeserializationException("Invalid Docker compose file")
       }
