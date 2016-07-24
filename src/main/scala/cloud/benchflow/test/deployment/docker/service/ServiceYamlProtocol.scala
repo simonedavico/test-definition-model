@@ -23,7 +23,7 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
 
   implicit object VolumesFromYamlFormat extends YamlFormat[VolumesFrom] {
 
-    val volumesFromRegex = "([a-zA-Z0-9_]+)(?::(ro|rw))?".r
+    val volumesFromRegex = "([a-zA-Z0-9_\\${}]+)(?::(ro|rw))?".r
 
     override def write(obj: VolumesFrom): YamlValue = {
 
