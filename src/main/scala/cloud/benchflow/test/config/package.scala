@@ -152,7 +152,7 @@ package object config {
     def bindings(serviceName: String) = benchflow_config.getOrElse(serviceName, Seq())
   }
 
-  case class TargetService(name: String, endpoint: String)
+  case class TargetService(name: String, endpoint: String, sutReadyLogCheck: Option[String] = None)
 
   case class SutConfiguration(targetService: TargetService,
                               deploy: Deploy,

@@ -41,17 +41,18 @@ goal:
     camunda: [ camundaParameter ]
 
 
-sut-configuration:
+sutConfiguration:
 
-    target-service:
+    targetService:
         name: camunda
         endpoint: /engine-rest
+        sutReadyLogCheck: bla
 
     deploy:
         camunda: bull
         db: lisa1
 
-    benchflow-config:
+    benchflowConfig:
 
         camunda:
         - stats
