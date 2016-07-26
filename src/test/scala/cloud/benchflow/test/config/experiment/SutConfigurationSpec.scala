@@ -63,7 +63,7 @@ class SutConfigurationSpec extends FlatSpec with Matchers with ConfigurationYaml
   "BenchFlowConfig" should "parse correctly" in {
 
     val benchFlowConfig =
-      """benchflow-config:
+      """benchflowConfig:
         |  camunda:
         |  - mysql:
         |      config:
@@ -131,13 +131,13 @@ class SutConfigurationSpec extends FlatSpec with Matchers with ConfigurationYaml
   "SutConfiguration" should "parse correctly" in {
 
     val sutConfiguration =
-      """sut-configuration:
-        |  target-service:
+      """sutConfiguration:
+        |  targetService:
         |    name: camunda
         |    endpoint: /engine-rest
         |  deploy:
         |    camunda: lisa1
-        |  benchflow-config:
+        |  benchflowConfig:
         |    camunda: [ stats, mysql ]
         |    db:
         |    - mysql:
