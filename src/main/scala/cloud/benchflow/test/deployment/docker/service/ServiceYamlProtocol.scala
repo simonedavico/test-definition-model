@@ -19,6 +19,7 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
   implicit val exposeFormat = yamlFormat1(Expose)
   implicit val networkFormat = yamlFormat1(Network)
   implicit val extraHostsFormat = yamlFormat1(ExtraHosts)
+  implicit val dependsOnFormat = yamlFormat1(DependsOn)
 
 
   implicit object VolumesFromYamlFormat extends YamlFormat[VolumesFrom] {
@@ -217,6 +218,13 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
               case _ => emptyMap
             })
 
+            ++
+
+            (c.dependsOn match {
+              case Some(_) => c.dependsOn.toYaml.asYamlObject.fields
+              case _ => emptyMap
+            })
+
           )
       )
     }
@@ -276,6 +284,13 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             case _ => None
           }
 
+          val dependsOn = params.fields.get(YamlString("depends_on"))
+          match {
+            case Some(YamlArray(services)) =>
+              Some(DependsOn(services.map(_.convertTo[String])))
+            case _ => None
+          }
+
           val expose = params.fields.get(YamlString("expose"))
           match {
             case Some(YamlArray(exp)) =>
@@ -321,7 +336,8 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             extra_hosts = extra_hosts,
             cpuSet = cpuset,
             memLimit = memlimit,
-            volumesFrom = volumesFrom
+            volumesFrom = volumesFrom,
+            dependsOn = dependsOn
           )
         case _ => throw DeserializationException("Invalid Docker compose file")
       }
