@@ -18,7 +18,7 @@ class ComposeSpec extends FlatSpec with Matchers {
 
     val dockerCompose =
       """
-        |version: 2
+        |version: '2'
         |services:
         |  camunda:
         |    image: camunda_image
@@ -33,7 +33,7 @@ class ComposeSpec extends FlatSpec with Matchers {
       """.stripMargin.parseYaml.convertTo[DockerCompose]
 
     val parsedDockerCompose = DockerCompose(
-      version = 2,
+      version = "2",
       networks = Some(
         Networks(
           Map("foo" -> NetworkConfig("custom"))

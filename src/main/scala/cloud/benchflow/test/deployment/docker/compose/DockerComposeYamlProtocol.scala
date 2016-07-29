@@ -46,7 +46,7 @@ object DockerComposeYamlProtocol extends DefaultYamlProtocol {
         (serviceName, yaml.convertTo[Service])
       }
 
-      val version = yaml.asYamlObject.fields.get(YamlString("version")).get.convertTo[Int]
+      val version = yaml.asYamlObject.fields.get(YamlString("version")).get.convertTo[String]
       val services = yaml.asYamlObject.fields.get(YamlString("services")).get match {
         case YamlObject(yamlServices) => yamlServices.map {
           case (sName, sFields) =>

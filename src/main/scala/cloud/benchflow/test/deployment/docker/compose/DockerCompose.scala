@@ -14,7 +14,7 @@ case class NetworkConfig(driver: String)
 case class Networks(nets: Map[String, NetworkConfig])
 
 case class DockerCompose(services: Map[String, Service],
-                         version: Int,
+                         version: String,
                          networks: Option[Networks]) {
 
   override def toString = this.toYaml.prettyPrint
