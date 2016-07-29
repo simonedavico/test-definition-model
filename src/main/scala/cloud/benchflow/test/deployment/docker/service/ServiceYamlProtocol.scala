@@ -19,6 +19,7 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
   implicit val exposeFormat = yamlFormat1(Expose)
   implicit val networkFormat = yamlFormat1(Network)
   implicit val extraHostsFormat = yamlFormat1(ExtraHosts)
+  implicit val dependsOnFormat = yamlFormat1(DependsOn)
 
   implicit object EnvironmentYamlFormat extends YamlFormat[Environment] {
 
@@ -164,6 +165,20 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
               case _ => emptyMap
             })
 
+            ++
+
+            (c.volumesFrom match {
+              case Some(_) => c.volumesFrom.toYaml.asYamlObject.fields
+              case _ => emptyMap
+            })
+
+            ++
+
+            (c.dependsOn match {
+              case Some(_) => c.dependsOn.toYaml.asYamlObject.fields
+              case _ => emptyMap
+            })
+
           )
       )
     }
@@ -223,6 +238,13 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             case _ => None
           }
 
+          val dependsOn = params.fields.get(YamlString("depends_on"))
+          match {
+            case Some(YamlArray(services)) =>
+              Some(DependsOn(services.map(_.convertTo[String])))
+            case _ => None
+          }
+
           val expose = params.fields.get(YamlString("expose"))
           match {
             case Some(YamlArray(exp)) =>
@@ -250,6 +272,12 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             case _ => None
           }
 
+          val volumesFrom = params.fields.get(YamlString("volumes_from")) match {
+            case Some(vf) =>
+              Some(vf.convertTo[VolumesFrom])
+            case _ => None
+          }
+
           Service(serviceName,
             image = image,
             containerName = cname,
@@ -261,7 +289,9 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             net = network,
             extra_hosts = extra_hosts,
             cpuSet = cpuset,
-            memLimit = memlimit
+            memLimit = memlimit,
+            volumesFrom = volumesFrom,
+            dependsOn = dependsOn
           )
         case _ => throw DeserializationException("Invalid Docker compose file")
       }
