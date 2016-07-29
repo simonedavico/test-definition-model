@@ -28,15 +28,15 @@ trait BenchFlowTestYamlProtocol extends ConfigurationYamlProtocol with GoalYamlP
       val drivers = sut.sutsType match {
         case WfMS => testObject.fields.get(YamlString("drivers")).get.asInstanceOf[YamlArray].elements.map(d => d.convertTo[WfMSDriver])
         case Http => testObject.fields.get(YamlString("drivers")).get.asInstanceOf[YamlArray].elements.map(d => d.convertTo[HttpDriver])
-        case _ => throw new DeserializationException("Illegal value for suts_type field.")
+        case _ => throw new DeserializationException("Illegal value for type field.")
       }
 
       val properties = testObject.fields.get(YamlString("properties")).map { yamlProps =>
         YamlObject(YamlString("properties") -> yamlProps).convertTo[Properties]
       }
 
-      val sutConfiguration = testObject.fields.get(YamlString("sut-configuration")).map { yamlConfig =>
-        YamlObject(YamlString("sut-configuration") -> yamlConfig).convertTo[SutConfiguration]
+      val sutConfiguration = testObject.fields.get(YamlString("sutConfiguration")).map { yamlConfig =>
+        YamlObject(YamlString("sutConfiguration") -> yamlConfig).convertTo[SutConfiguration]
       }.get
 
       val trials = testObject.fields.get(YamlString("trials")).map { yamlTrials =>

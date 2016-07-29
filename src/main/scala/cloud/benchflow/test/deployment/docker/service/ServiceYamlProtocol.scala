@@ -21,6 +21,50 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
   implicit val extraHostsFormat = yamlFormat1(ExtraHosts)
   implicit val dependsOnFormat = yamlFormat1(DependsOn)
 
+  implicit object VolumesFromYamlFormat extends YamlFormat[VolumesFrom] {
+
+    val volumesFromRegex = "([a-zA-Z0-9_\\${}]+)(?::(ro|rw))?".r
+
+    override def write(obj: VolumesFrom): YamlValue = {
+
+      YamlObject(
+        YamlString("volumes_from") ->
+          YamlArray(
+            obj.volumes.map { volume => volume match {
+
+                case (serviceName, None) => YamlString(serviceName)
+                case (serviceName, Some(accessRights)) => YamlString(s"$serviceName:$accessRights")
+
+              }
+            }.toVector
+          )
+      )
+
+    }
+
+    override def read(yaml: YamlValue): VolumesFrom = {
+
+      yaml match {
+
+        case YamlArray(yamlVolumesFrom) => VolumesFrom(
+          yamlVolumesFrom map { yamlVolumeFrom =>
+
+            yamlVolumeFrom.convertTo[String] match {
+              case volumesFromRegex(serviceName, null) =>
+                (serviceName, None)
+              case volumesFromRegex(serviceName, accessRights) =>
+                (serviceName, Some(VolumeAccessRights(accessRights)))
+            }
+          }
+        )
+
+        case _ => ???
+      }
+
+    }
+
+  }
+
   implicit object EnvironmentYamlFormat extends YamlFormat[Environment] {
 
     override def read(yaml: YamlValue): Environment = {

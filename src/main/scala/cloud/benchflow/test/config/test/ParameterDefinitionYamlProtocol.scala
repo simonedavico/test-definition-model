@@ -17,7 +17,7 @@ trait ParameterDefinitionYamlProtocol extends DefaultYamlProtocol with ValueRang
     override def read(yaml: YamlValue): MemoryDefinition = {
 
       val valueRange = yaml.asYamlObject.fields.get(YamlString(SystemParameterDefinition.memoryDefinitionKey))
-                           .get.convertTo[ValueRange[_]]
+                           .get.convertTo[ValueRange[_]].asInstanceOf[ValueRange[Double]]
 
       MemoryDefinition(valueRange)
 
@@ -32,7 +32,7 @@ trait ParameterDefinitionYamlProtocol extends DefaultYamlProtocol with ValueRang
     override def read(yaml: YamlValue): CpusDefinition = {
 
       val valueRange = yaml.asYamlObject.fields.get(YamlString(SystemParameterDefinition.cpusDefinitionKey))
-                           .get.convertTo[ValueRange[_]]
+                           .get.convertTo[ValueRange[_]].asInstanceOf[ValueRange[Double]]
 
       CpusDefinition(valueRange)
 
@@ -41,12 +41,12 @@ trait ParameterDefinitionYamlProtocol extends DefaultYamlProtocol with ValueRang
     override def write(obj: CpusDefinition): YamlValue = ???
   }
 
-  implicit object SystemParameterDefinitionYamlFormat extends YamlFormat[SystemParameterDefinition] {
+  implicit object SystemParameterDefinitionYamlFormat extends YamlFormat[SystemParameterDefinition[_]] {
 
-    override def read(yaml: YamlValue): SystemParameterDefinition = {
+    override def read(yaml: YamlValue): SystemParameterDefinition[_] = {
 
       Try(MemoryDefinitionYamlFormat.read(yaml))
-        .recover[SystemParameterDefinition] {
+        .recover[SystemParameterDefinition[_]] {
 
           case _ => CpusDefinitionYamlFormat.read(yaml)
 
@@ -54,18 +54,18 @@ trait ParameterDefinitionYamlProtocol extends DefaultYamlProtocol with ValueRang
 
     }
 
-    override def write(obj: SystemParameterDefinition): YamlValue = ???
+    override def write(obj: SystemParameterDefinition[_]): YamlValue = ???
   }
 
 
-  implicit object ServiceParameterDefinitionYamlFormat extends YamlFormat[ServiceParameterDefinition] {
+  implicit object ServiceParameterDefinitionYamlFormat extends YamlFormat[ServiceParameterDefinition[_]] {
 
-    override def read(yaml: YamlValue): ServiceParameterDefinition = {
+    override def read(yaml: YamlValue): ServiceParameterDefinition[_] = {
 
       val serviceName = yaml.asYamlObject.fields.head._1.convertTo[String]
       val paramDefinition = yaml.asYamlObject.fields.head._2.asYamlObject
       val paramName = paramDefinition.fields.head._1.convertTo[String]
-      val valueRange = paramDefinition.fields.head._2.convertTo[ValueRange[_]]
+      val valueRange = paramDefinition.fields.head._2.convertTo[ValueRange[_]].asInstanceOf[ValueRange[Double]]
 
       paramName match {
 
@@ -90,7 +90,7 @@ trait ParameterDefinitionYamlProtocol extends DefaultYamlProtocol with ValueRang
 
     }
 
-    override def write(obj: ServiceParameterDefinition): YamlValue = ???
+    override def write(obj: ServiceParameterDefinition[_]): YamlValue = ???
 
   }
 

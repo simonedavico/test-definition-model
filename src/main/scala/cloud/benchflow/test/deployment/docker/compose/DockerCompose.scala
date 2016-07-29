@@ -16,8 +16,14 @@ case class Networks(nets: Map[String, NetworkConfig])
 case class DockerCompose(services: Map[String, Service],
                          version: Int,
                          networks: Option[Networks]) {
-  this.toYaml.prettyPrint
+
+  override def toString = this.toYaml.prettyPrint
+
 }
 object DockerCompose {
+
   def fromYaml(yaml: String): DockerCompose = yaml.parseYaml.convertTo[DockerCompose]
+
+  def toYaml(dc: DockerCompose): String = dc.toYaml.prettyPrint
+
 }

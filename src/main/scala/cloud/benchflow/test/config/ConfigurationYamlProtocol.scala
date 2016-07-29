@@ -15,7 +15,7 @@ trait ConfigurationYamlProtocol extends DefaultYamlProtocol
                                 with HttpSutYamlProtocol {
 
   implicit val deployFormat = yamlFormat1(Deploy)
-  implicit val targetServiceFormat = yamlFormat2(TargetService)
+  implicit val targetServiceFormat = yamlFormat3(TargetService)
   implicit val totalTrialsFormat = yamlFormat1(TotalTrials)
   implicit val executionFormat = yamlFormat3(LoadFunction)
 
@@ -124,9 +124,9 @@ trait ConfigurationYamlProtocol extends DefaultYamlProtocol
 
     override def write(sutConfig: SutConfiguration): YamlValue = {
       YamlObject(
-        YamlString("target-service") -> sutConfig.targetService.toYaml,
+        YamlString("targetService") -> sutConfig.targetService.toYaml,
         YamlString("deploy") -> sutConfig.deploy.toYaml,
-        YamlString("benchflow-config") -> sutConfig.bfConfig.toYaml
+        YamlString("benchflowConfig") -> sutConfig.bfConfig.toYaml
       )
     }
 
@@ -134,10 +134,10 @@ trait ConfigurationYamlProtocol extends DefaultYamlProtocol
       val sutConfig = yaml.asYamlObject.fields.head
       val sections = sutConfig._2.asYamlObject.fields.toMap
       val deployKey = YamlString("deploy")
-      val bfConfigKey = YamlString("benchflow-config")
+      val bfConfigKey = YamlString("benchflowConfig")
       val deploy = YamlObject(deployKey -> sections.get(deployKey).get).convertTo[Deploy]
       val bfConfig = YamlObject(bfConfigKey -> sections.get(bfConfigKey).get).convertTo[BenchFlowConfig]
-      val targetService = sections.get(YamlString("target-service")).get.convertTo[TargetService]
+      val targetService = sections.get(YamlString("targetService")).get.convertTo[TargetService]
       SutConfiguration(deploy = deploy, bfConfig = bfConfig, targetService = targetService)
     }
   }

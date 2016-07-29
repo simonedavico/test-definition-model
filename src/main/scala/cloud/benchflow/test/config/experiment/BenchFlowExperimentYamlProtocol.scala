@@ -31,7 +31,7 @@ object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
             case Http => bb.drivers.map(_.asInstanceOf[HttpDriver]).toYaml
           }
         },
-        YamlString("sut-configuration") -> bb.sutConfiguration.toYaml
+        YamlString("sutConfiguration") -> bb.sutConfiguration.toYaml
       )
     }
 
@@ -47,13 +47,13 @@ object BenchFlowExperimentYamlProtocol extends ConfigurationYamlProtocol {
       val drivers = sut.sutsType match {
         case WfMS => bfBmark.get(YamlString("drivers")).get.asInstanceOf[YamlArray].elements.map(d => d.convertTo[WfMSDriver])
         case Http => bfBmark.get(YamlString("drivers")).get.asInstanceOf[YamlArray].elements.map(d => d.convertTo[HttpDriver])
-        case _ => throw new DeserializationException("Illegal value for suts_type field.")
+        case _ => throw new DeserializationException("Illegal value for type field.")
       }
 
       val name = bfBmark.get(YamlString("testName")).get.convertTo[String]
       val description = bfBmark.get(YamlString("description")).get.convertTo[String]
       val properties = getObject("properties").convertTo[Properties]
-      val sutConfig = getObject("sut-configuration").convertTo[SutConfiguration]
+      val sutConfig = getObject("sutConfiguration").convertTo[SutConfiguration]
       val trials = getObject("trials").convertTo[TotalTrials]
       val users = getObject("users").convertTo[Users]
       val execution = bfBmark.get(YamlString("execution")).get.convertTo[LoadFunction]

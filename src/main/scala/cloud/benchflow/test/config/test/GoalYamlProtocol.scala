@@ -11,7 +11,7 @@ trait GoalYamlProtocol extends DefaultYamlProtocol with ParameterDefinitionYamlP
 
   implicit object GoalYamlFormat extends YamlFormat[Goal] {
 
-    private def readServiceParameterDefinitions(yaml: YamlValue): Seq[ServiceParameterDefinition] = {
+    private def readServiceParameterDefinitions(yaml: YamlValue): Seq[ServiceParameterDefinition[_]] = {
 
       val definition = yaml.asYamlObject.fields.head
       val serviceName = definition._1.convertTo[String] match {
@@ -25,6 +25,7 @@ trait GoalYamlProtocol extends DefaultYamlProtocol with ParameterDefinitionYamlP
         }  yield ServiceParameterDefinitionYamlFormat.read(
           YamlObject(YamlString(serviceName) -> aDef)
         )
+        case _ => throw new Exception("Unexpected format for service parameter definitions")
       }
 
     }
@@ -39,6 +40,7 @@ trait GoalYamlProtocol extends DefaultYamlProtocol with ParameterDefinitionYamlP
 
       val parsedDefinitions = parameterDefinitions match {
         case YamlArray(defs) => defs flatMap readServiceParameterDefinitions
+        case _ => ???
       }
 
       val toExplore = yaml.asYamlObject.fields.get(YamlString("explore")).get.convertTo[Map[String, Seq[String]]]

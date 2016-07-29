@@ -25,11 +25,14 @@ case class BenchFlowExperiment(name: String,
 }
 object BenchFlowExperiment {
 
+  import BenchFlowExperimentYamlProtocol._
+  import net.jcazevedo.moultingyaml._
+
   def fromYaml(yaml: String): BenchFlowExperiment = {
-    import BenchFlowExperimentYamlProtocol._
-    import net.jcazevedo.moultingyaml._
     yaml.stripMargin.parseYaml.convertTo[BenchFlowExperiment]
   }
+
+  def toYaml(be: BenchFlowExperiment): String = be.toYaml.prettyPrint
 
 }
 
