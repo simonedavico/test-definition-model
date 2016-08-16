@@ -58,6 +58,8 @@ class ComposeSpec extends FlatSpec with Matchers {
       )
     )
 
+    println(parsedDockerCompose.toYaml.prettyPrint)
+
     dockerCompose should be (parsedDockerCompose)
   }
 

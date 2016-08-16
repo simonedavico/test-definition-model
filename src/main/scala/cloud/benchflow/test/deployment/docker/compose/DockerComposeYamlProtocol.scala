@@ -33,8 +33,8 @@ object DockerComposeYamlProtocol extends DefaultYamlProtocol {
             case _ => throw new SerializationException("Can't serialize networks")
           }
         )
-
     }
+
   }
 
   implicit object DockerComposeYamlFormat extends YamlFormat[DockerCompose] {
@@ -66,16 +66,38 @@ object DockerComposeYamlProtocol extends DefaultYamlProtocol {
     }
 
     override def write(dc: DockerCompose): YamlValue = {
-      YamlObject(
-        YamlString("services") -> {
-          YamlObject(dc.services.map {
-            case (serviceName, serviceObj) =>
-              serviceName.toYaml -> serviceObj.toYaml.asYamlObject.fields.values.head
-          })
-        },
-        YamlString("networks") -> dc.networks.toYaml,
-        YamlString("version") -> dc.version.toYaml
-      )
+
+      val parsedNets = dc.networks.toYaml
+
+      parsedNets match {
+
+        case YamlNull =>
+
+          YamlObject(
+            YamlString("services") -> {
+              YamlObject(dc.services.map {
+                case (serviceName, serviceObj) =>
+                  serviceName.toYaml -> serviceObj.toYaml.asYamlObject.fields.values.head
+              })
+            },
+            YamlString("version") -> dc.version.toYaml
+          )
+
+        case _ =>
+
+          YamlObject(
+            YamlString("services") -> {
+              YamlObject(dc.services.map {
+                case (serviceName, serviceObj) =>
+                  serviceName.toYaml -> serviceObj.toYaml.asYamlObject.fields.values.head
+              })
+            },
+            YamlString("networks") -> parsedNets,
+            YamlString("version") -> dc.version.toYaml
+          )
+
+      }
+
     }
 
   }
