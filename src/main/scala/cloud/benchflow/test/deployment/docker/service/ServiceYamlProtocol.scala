@@ -13,13 +13,13 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
   implicit val imageFormat = yamlFormat1(Image)
   implicit val containerFormat = yamlFormat1(ContainerName)
   implicit val commandFormat = yamlFormat1(Command)
-  //implicit val environmentFormat = yamlFormat1(Environment)
   implicit val volumesFormat = yamlFormat1(Volumes)
   implicit val portsFormat = yamlFormat1(Ports)
   implicit val exposeFormat = yamlFormat1(Expose)
   implicit val networkFormat = yamlFormat1(Network)
   implicit val extraHostsFormat = yamlFormat1(ExtraHosts)
   implicit val dependsOnFormat = yamlFormat1(DependsOn)
+  implicit val pidFormat = yamlFormat1(Pid)
 
 
   implicit object VolumesFromYamlFormat extends YamlFormat[VolumesFrom] {
@@ -225,6 +225,13 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
               case _ => emptyMap
             })
 
+            ++
+
+            (c.pid match {
+              case Some(_) => c.pid.toYaml.asYamlObject.fields
+              case _ => emptyMap
+            })
+
           )
       )
     }
@@ -324,6 +331,12 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             case _ => None
           }
 
+          val pid = params.fields.get(YamlString("pid")) match {
+            case Some(p) =>
+              Some(YamlObject(YamlString("pid") -> p).convertTo[Pid])
+            case _ => None
+          }
+
           Service(serviceName,
             image = image,
             containerName = cname,
@@ -337,7 +350,8 @@ object ServiceYamlProtocol extends DefaultYamlProtocol {
             cpuSet = cpuset,
             memLimit = memlimit,
             volumesFrom = volumesFrom,
-            dependsOn = dependsOn
+            dependsOn = dependsOn,
+            pid = pid
           )
         case _ => throw DeserializationException("Invalid Docker compose file")
       }

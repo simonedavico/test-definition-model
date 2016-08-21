@@ -31,6 +31,7 @@ class ServiceSpec extends FlatSpec with Matchers {
         |  - other
         |  depends_on:
         |  - otherService
+        |  pid: host
       """.stripMargin.parseYaml.convertTo[Service]
 
     val parsedService = Service(
@@ -46,7 +47,8 @@ class ServiceSpec extends FlatSpec with Matchers {
       memLimit = Some(MemLimit(limit = 5, unit = GigaByte)),
       cpuSet = Some(CpuSet(4)),
       volumesFrom = Some(VolumesFrom(Vector(("db", Some(ReadOnly)), ("other", None)))),
-      dependsOn = Some(DependsOn(Vector("otherService")))
+      dependsOn = Some(DependsOn(Vector("otherService"))),
+      pid = Some(Pid("host"))
     )
 
     service should be (parsedService)

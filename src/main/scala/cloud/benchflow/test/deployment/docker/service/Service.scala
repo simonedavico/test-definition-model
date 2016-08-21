@@ -47,6 +47,7 @@ case class Expose(expose: Seq[Int])
 case class Network(network_mode: String)
 case class ExtraHosts(extra_hosts: Seq[String])
 case class CpuSet(cores: Int)
+case class Pid(pid: String)
 
 sealed trait MemUnit { def toString: String }
 object MemUnit {
@@ -72,8 +73,22 @@ case class Service(name: String,
                    cpuSet: Option[CpuSet] = None,
                    memLimit: Option[MemLimit] = None,
                    volumesFrom: Option[VolumesFrom] = None,
-                   dependsOn: Option[DependsOn] = None) {
+                   dependsOn: Option[DependsOn] = None,
+                   pid: Option[Pid] = None) {
 
+  //valid port configurations:
+  //- port:port
+  //- ip::port
+  //- ip:port:port
+  //- port
+
+//  private val singlePort = "([0-9]{1,5})".r
+//  private val onlyPorts = s"$singlePort:$singlePort".r
+//  private val ipPattern = s"([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})".r
+//  private val ipAndSinglePort = s"([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})::$singlePort".r
+//  private val ipAndPorts = s"$ipPattern:$singlePort:$singlePort".r
+
+  //TODO: evaluate if these have to be changed with the ones above
   private val singlePort = "([0-9]{1,5})".r
   private val onlyPorts = s"$singlePort:$singlePort".r
   private val ipAndSinglePort = s"([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}):$singlePort".r
